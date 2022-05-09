@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "478179647331",
+    "project_id": "pay-a6698",
+    "storage_bucket": "pay-a6698.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478179647331:android:8278b634255e405098fd56",
+        "android_client_info": {
+          "package_name": "com.example.securepay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478179647331-6j1r0c843irunkv22sr6kiuqj634q3nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPdg8QgAcddqGZ2qgX1sjc1mLMRjYCj0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478179647331-6j1r0c843irunkv22sr6kiuqj634q3nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
