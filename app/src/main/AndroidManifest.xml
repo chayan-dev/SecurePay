@@ -13,11 +13,6 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.SecurePay">
 
-        <activity android:name=".Home"
-            android:exported="false"/>
-        <activity android:name=".Verify"
-            android:exported="false"/>
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
