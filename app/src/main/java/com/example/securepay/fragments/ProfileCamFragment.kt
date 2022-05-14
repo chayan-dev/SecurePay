@@ -1,60 +1,65 @@
 package com.example.securepay.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.example.securepay.R
+import com.example.securepay.databinding.FragmentProfileCamBinding
+import java.io.File
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val FILE_NAME = "photo.jpg"
+private const val REQUEST_CODE = 42
+private lateinit var photoFile: File
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileCamFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ProfileCamFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentProfileCamBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_cam, container, false)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding=FragmentProfileCamBinding.bind(view)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileCamFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileCamFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        binding.btnTakePicture.setOnClickListener {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            photoFile = getPhotoFile(FILE_NAME)
+
+            // This DOESN'T work for API >= 24 (starting 2016)
+            // takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile)
+
+            val fileProvider =
+                FileProvider.getUriForFile(this@ProfileCamFragment.requireContext(), "com.example.securepay.fileprovider", photoFile)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+
+            if (takePictureIntent.resolveActivity(this@ProfileCamFragment.requireContext().packageManager) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_CODE)
+            } else {
+                Toast.makeText(this@ProfileCamFragment.requireContext(), "Unable to open camera", Toast.LENGTH_SHORT).show()
             }
+        }
+
+    }
+
+    private fun getPhotoFile(fileName: String): File {
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        val storageDirectory = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(fileName, ".jpg", storageDirectory)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            val takenImage = data?.extras?.get("data") as Bitmap
+            val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
+            binding.imageView.setImageBitmap(takenImage)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+
     }
 }

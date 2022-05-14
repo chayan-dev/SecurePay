@@ -37,6 +37,10 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
 //            startActivity(Intent(this, MainActivity::class.java))
 //            finish()
         }
+
+        binding.camBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_welcomeFragment_to_profileCamFragment)
+        }
     }
 
 }
