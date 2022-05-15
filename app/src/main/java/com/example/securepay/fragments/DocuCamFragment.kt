@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.securepay.R
 import com.example.securepay.databinding.FragmentDocuCamBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -21,7 +22,7 @@ class DocuCamFragment : Fragment(R.layout.fragment_docu_cam) {
         super.onViewCreated(view, savedInstanceState)
         binding=FragmentDocuCamBinding.bind(view)
 
-        binding.button.setOnClickListener {
+        binding.DocuBtn.setOnClickListener {
             activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let { it1 ->
                 ImagePicker.with(this)
                     .crop()	    			//Crop image(Optional), Check Customization for more option
@@ -31,6 +32,10 @@ class DocuCamFragment : Fragment(R.layout.fragment_docu_cam) {
                     .start()
             }
 
+        }
+
+        binding.DocuVerifyBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_docuCamFragment_to_paymentHomeFragment)
         }
 
 
@@ -43,7 +48,7 @@ class DocuCamFragment : Fragment(R.layout.fragment_docu_cam) {
             val uri: Uri = data?.data!!
 
             // Use Uri object instead of File to avoid storage permissions
-            binding.imageView.setImageURI(uri)
+            binding.DocuIv.setImageURI(uri)
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this@DocuCamFragment.requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
         } else {

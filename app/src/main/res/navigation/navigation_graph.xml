@@ -48,5 +48,14 @@
         android:id="@+id/docuCamFragment"
         android:name="com.example.securepay.fragments.DocuCamFragment"
         android:label="fragment_docu_cam"
-        tools:layout="@layout/fragment_docu_cam" />
+        tools:layout="@layout/fragment_docu_cam" >
+        <action
+            android:id="@+id/action_docuCamFragment_to_paymentHomeFragment"
+            app:destination="@id/paymentHomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentHomeFragment"
+        android:name="com.example.securepay.fragments.PaymentHomeFragment"
+        android:label="fragment_payment_home"
+        tools:layout="@layout/fragment_payment_home" />
 </navigation>
