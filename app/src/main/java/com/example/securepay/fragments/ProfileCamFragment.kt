@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.navigation.fragment.findNavController
 import com.example.securepay.R
 import com.example.securepay.databinding.FragmentProfileCamBinding
 import java.io.File
@@ -42,6 +43,10 @@ class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
             } else {
                 Toast.makeText(this@ProfileCamFragment.requireContext(), "Unable to open camera", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.nextBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_profileCamFragment_to_docuCamFragment)
         }
 
     }

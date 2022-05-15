@@ -39,5 +39,14 @@
         android:id="@+id/profileCamFragment"
         android:name="com.example.securepay.fragments.ProfileCamFragment"
         android:label="fragment_profile_cam"
-        tools:layout="@layout/fragment_profile_cam" />
+        tools:layout="@layout/fragment_profile_cam" >
+        <action
+            android:id="@+id/action_profileCamFragment_to_docuCamFragment"
+            app:destination="@id/docuCamFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/docuCamFragment"
+        android:name="com.example.securepay.fragments.DocuCamFragment"
+        android:label="fragment_docu_cam"
+        tools:layout="@layout/fragment_docu_cam" />
 </navigation>

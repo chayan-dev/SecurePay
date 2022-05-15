@@ -53,4 +53,11 @@ dependencies {
 
     //    PinView
     implementation 'io.github.chaosleung:pinview:1.4.4'
+
+    //imagePicker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    //
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
 }
