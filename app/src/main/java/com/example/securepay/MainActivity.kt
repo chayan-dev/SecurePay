@@ -1,5 +1,6 @@
 package com.example.securepay
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navHostFragment= supportFragmentManager.findFragmentById(R.id.loginNavHostFragment) as NavHostFragment
+
+        val sharedPrefCam=getSharedPreferences("spCam",Context.MODE_PRIVATE)
+
+        val sharedPrefDocu=getSharedPreferences("spDocu",Context.MODE_PRIVATE)
 
     }
 
