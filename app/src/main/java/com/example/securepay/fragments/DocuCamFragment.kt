@@ -3,6 +3,7 @@ package com.example.securepay.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -28,13 +29,14 @@ class DocuCamFragment : Fragment(R.layout.fragment_docu_cam) {
     var bitmap:Bitmap?=null
 
 
-    val sharedPrefDocu=this@DocuCamFragment.requireContext().getSharedPreferences("spDocu",
-        Context.MODE_PRIVATE)
+    lateinit var sharedPrefDocu:SharedPreferences
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding=FragmentDocuCamBinding.bind(view)
+
+        sharedPrefDocu=this@DocuCamFragment.requireContext().getSharedPreferences("spDocu", Context.MODE_PRIVATE)
 
         binding.DocuBtn.setOnClickListener {
             activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let { it1 ->
