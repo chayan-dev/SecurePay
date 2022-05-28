@@ -88,7 +88,7 @@ class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
             val imageStream=outputStream.toByteArray()
             val imageString=Base64.encodeToString(imageStream,Base64.DEFAULT)
 
-            binding.imageStreamTv.text=imageString
+//            binding.imageStreamTv.text=imageString
 
             Log.d("test","test")
             Log.d("api call",imageString)
