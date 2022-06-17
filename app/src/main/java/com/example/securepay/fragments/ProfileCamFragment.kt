@@ -18,9 +18,14 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.securepay.R
 import com.example.securepay.databinding.FragmentProfileCamBinding
+import com.example.securepay.model.PicIdentifierReqBody
+import com.example.securepay.repository.PicIdentifierRepository
+import com.example.securepay.viewmodel.PicIdentifierViewModel
+import com.example.securepay.viewmodel.PicIdentifierViewModelFactory
 import com.github.dhaval2404.imagepicker.ImagePicker
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -35,24 +40,34 @@ private lateinit var photoFile: File
 class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
 
     private lateinit var binding: FragmentProfileCamBinding
-    var bitmap:Bitmap?=null
+    var bitmap: Bitmap? = null
+    private lateinit var viewModel: PicIdentifierViewModel
 
-    lateinit var sharedPrefCam:SharedPreferences
+    lateinit var sharedPrefCam: SharedPreferences
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding=FragmentProfileCamBinding.bind(view)
+        binding = FragmentProfileCamBinding.bind(view)
 
-        sharedPrefCam=this@ProfileCamFragment.requireContext().getSharedPreferences("spCam", Context.MODE_PRIVATE)
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            PicIdentifierViewModelFactory(PicIdentifierRepository())
+        ).get(PicIdentifierViewModel::class.java)
+
+        sharedPrefCam = this@ProfileCamFragment.requireContext()
+            .getSharedPreferences("spCam", Context.MODE_PRIVATE)
 
         binding.btnTakePicture.setOnClickListener {
 
             activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let { it1 ->
                 ImagePicker.with(this)
-                    .crop()	    			//Crop image(Optional), Check Customization for more option
-                    .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                    .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                    .crop()                    //Crop image(Optional), Check Customization for more option
+                    .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                    .maxResultSize(
+                        1080,
+                        1080
+                    )    //Final image resolution will be less than 1080 x 1080(Optional)
                     .saveDir(it1)
                     .start()
             }
@@ -61,7 +76,8 @@ class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
         binding.nextBtn.setOnClickListener {
             findNavController().navigate(R.id.action_profileCamFragment_to_docuCamFragment)
         }
-
+        viewModel.postPicIdentifier(PicIdentifierReqBody("https://firebasestorage.googleapis.com/v0/b/pay-a6698.appspot.com/o/_124838784_gettyimages-464172224.jpg?alt=media&token=5cb72261-1fbf-4a49-9f85-f485f38cdfc1"))
+        Log.d("chkFaceId",viewModel.faceId.value.toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -76,37 +92,48 @@ class ProfileCamFragment : Fragment(R.layout.fragment_profile_cam) {
 //            val bitmapStream=MediaStore.Images.Media.getBitmap(requireContext().contentResolver,uri)
 
             //converting uri to bitmap
-            bitmap= if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, uri))
+            bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(
+                    ImageDecoder.createSource(
+                        requireContext().contentResolver,
+                        uri
+                    )
+                )
             } else {
                 MediaStore.Images.Media.getBitmap(requireContext().contentResolver, uri)
             }
 
             //bitmap to base64
-            val outputStream=ByteArrayOutputStream()
-            bitmap?.compress(Bitmap.CompressFormat.JPEG,100,outputStream)
-            val imageStream=outputStream.toByteArray()
-            val imageString=Base64.encodeToString(imageStream,Base64.DEFAULT)
+            val outputStream = ByteArrayOutputStream()
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            val imageStream = outputStream.toByteArray()
+            val imageString = Base64.encodeToString(imageStream, Base64.DEFAULT)
 
 //            binding.imageStreamTv.text=imageString
 
-            Log.d("test","test")
-            Log.d("api call",imageString)
+            Log.d("test", "test")
+            Log.d("api call", imageString)
 
             //storing in shared pref
-            val editor=sharedPrefCam.edit()
-            editor.apply{
+            val editor = sharedPrefCam.edit()
+            editor.apply {
                 putString("pfCamByteArray", imageString)
                 apply()
             }
 
 
-
-
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this@ProfileCamFragment.requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@ProfileCamFragment.requireContext(),
+                ImagePicker.getError(data),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            Toast.makeText(this@ProfileCamFragment.requireContext(), "Task Cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@ProfileCamFragment.requireContext(),
+                "Task Cancelled",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
